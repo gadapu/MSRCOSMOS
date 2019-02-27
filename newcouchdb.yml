@@ -1,0 +1,39 @@
+---
+- hosts: web
+  tasks:
+    - name: update repopsirory
+ # Used to install the newest versions of all packages currently installed on the system from the sources enumerated in /etc/apt/sources.list
+      shell: apt-get update
+
+
+    - name: installing software properties 
+      # installing software properties It allows you to easily manage your distribution and independent software vendor software sources
+      shell: apt-get install software-properties-common -yf
+    
+    
+    - name: add ppa repoository
+      # Personal Package Archives (PPA) allow you to upload Ubuntu source packages to be built and published as an apt repository by Launchpad
+      shell: add-apt-repository ppa:couchdb/stable -y
+    
+    
+    - name: again update repository
+      shell: apt-get update
+    
+    
+    - name: install couchdb # installing couchdb by using following commands
+      shell: apt-get install couchdb -y
+   
+    - name: install curl # installing curl package used in command lines or scripts to transfer data
+      shell: apt-get install curl -y
+    - name: adding new database with cli # adding new database in cli
+      command: curl -X PUT localhost:5984/nagaraju
+    - name: stop couchdb  before changing owner && group permissions # stoping the couchdb for changing the owner and group permissions
+      shell: systemctl stop couchdb.service
+    - name: change owner permission # changing the owner permissions
+      shell: chown -R couchdb:couchdb /usr/share/couchdb /etc/couchdb /usr/bin/couchdb
+    - name: change group permission # changing the group permissions
+      shell: chmod -R 0770 /usr/share/couchdb /etc/couchdb /usr/bin/couchdb 
+    - name: start couchdb # starting the couchdb to access it
+      shell: systemctl start couchdb.service 
+# to access it from external use ssh -i key.pem -L 5984:localhost:5984 ubuntu@your_server_ip in your hostmachine
+#  then open your browser and type http://localhost:5984/_utils/

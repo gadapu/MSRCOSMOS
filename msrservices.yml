@@ -1,0 +1,40 @@
+---
+ - hosts: msr
+   vars: 
+     packages: 
+        - gcc
+        - git
+        - git-core
+        - docker
+        - docker-compose
+        - openssl
+
+   tasks:        
+     - name: downloading nvm dependices 
+       # downloading dependencies and its prerequists along with script
+       get_url: url=https://raw.githubusercontent.com/creationix/nvm/v0.33.4/install.sh dest=/root mode=0755
+       become: yes
+     - name: install nvm
+       # running the downloaded script 
+       shell: sh install.sh 
+       register: nvm # register the values to nvm
+     - debug: msg={{nvm}} # output will be dispalyed
+     - name: unarchieve node
+       # Here directly i am  unarchive nodejs to dest without downloading the archive file
+       unarchive:
+          src: https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.xz 
+          dest: /root
+          remote_src: yes
+       become: yes
+     - name: install node
+       # installing nodejs by using following command
+       shell: apt update && apt install nodejs -y
+       register: node # registering the values into node
+     - debug: msg={{node}} # output of node will be displayed while we are running a playbook
+     - name: Install required packages
+       # Here above listed in vars all packages will be downloaded
+       apt: name={{item}} state=present
+       with_items: "{{packages}}"
+       become: yes
+       become_method: sudo
+    

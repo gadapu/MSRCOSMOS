@@ -1,0 +1,10 @@
+---
+- hosts: doc
+  tasks: 
+    - name: copying the index file to node 
+      shell: git clone https://github.com/nagaraju558/nagarajuk.git # cloning the git repository to host
+      become: yes
+      become_method: sudo 
+      ignore_errors: true
+    - name: copying index.html file # copying index.html from host to container using following command
+      command: docker cp /root/nagarajuk/index.html  db514efe3698:/var/www/html/
