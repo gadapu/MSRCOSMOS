@@ -35,5 +35,5 @@
       shell: chmod -R 0770 /usr/share/couchdb /etc/couchdb /usr/bin/couchdb 
     - name: start couchdb # starting the couchdb to access it
       shell: systemctl start couchdb.service 
-# to access it from external use ssh -i key.pem -L 5984:localhost:5984 ubuntu@your_server_ip in your hostmachine
+# to access it from external use ssh -L 5984:localhost:5984 couchdb_server_ip in your host machine
 #  then open your browser and type http://localhost:5984/_utils/
